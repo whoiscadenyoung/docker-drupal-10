@@ -1,0 +1,33 @@
+# https://www.youtube.com/watch?v=RDZ2URjN7nc
+
+# Docker compose version
+# Network is automatically created and grouped with docker-compose
+version: "3.8"
+services:
+  # During setup, the hostname for mysql is the container name
+  mysql:
+    container_name: mysql
+    image: mysql:latest
+    ports:
+    - 3306:3306
+    volumes:
+    - mysql_data:/var/lib/mysql
+    environment: 
+    - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    - MYSQL_DATABASE=${MYSQL_DATABASE}
+    - MYSQL_USER=${MYSQL_USER}
+    - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+  drupal:
+    container_name: drupal
+    image: drupal:latest
+    ports:
+    - 8080:80
+    volumes:
+    - ./drupal/web:/var/www/html
+    - ./drupal/vendor:/opt/drupal/vendor
+    - ./drupal/composer.json:/opt/drupal/composer.json
+    - ./drupal/composer.lock:/opt/drupal/composer.lock
+    links:
+    - mysql
+volumes:
+  mysql_data:
